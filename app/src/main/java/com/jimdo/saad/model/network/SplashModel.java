@@ -1,9 +1,13 @@
 package com.jimdo.saad.model.network;
 
 import com.jimdo.saad.contract.ISplash.*;
+import com.jimdo.saad.di.DaggerSplashComponent;
+import com.jimdo.saad.di.SplashComponent;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -17,16 +21,14 @@ import okhttp3.Response;
 public class SplashModel implements Callback {
 
     private ISplashPresenter presenter;
-    private OkHttpClient client;
+
+    OkHttpClient client;
 
     public SplashModel(ISplashPresenter presenter) {
         this.presenter = presenter;
 
-        client = new OkHttpClient.Builder()
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS)
-                .readTimeout(15, TimeUnit.SECONDS)
-                .build();
+        SplashComponent component = DaggerSplashComponent.create();
+        client = component.getOkHttpClient();
     }
 
     public void request(String url) {
